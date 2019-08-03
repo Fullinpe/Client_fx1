@@ -1,6 +1,7 @@
 package sample;
 
 import gnu.io.*;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.ScheduledService;
@@ -161,13 +162,13 @@ public class Controller implements Initializable {
 
 								//TODO
 								image= new Image(new ByteArrayInputStream(bytesimg));
-//							Platform.runLater(new Runnable() {
-//								@Override
-//								public void run() {
-//
-//									imv.setImage(image);
-//								}
-//							});
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+
+									imv.setImage(image);
+								}
+							});
 								flag=0;
 								System.out.println(Byte.toString(bytesimg[0])+Byte.toString(bytesimg[1])+Byte.toString(bytesimg[2])
 										+Byte.toString(bytesimg[3])+Byte.toString(bytesimg[4])+Byte.toString(bytesimg[5])
