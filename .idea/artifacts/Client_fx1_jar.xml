@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="Client_fx1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Client_fx1_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Client_fx1.jar">
+        <element id="module-output" name="Client_fx1" />
+      </element>
+      <element id="library" level="project" name="RXTXcomm" />
+    </root>
+  </artifact>
+</component>
