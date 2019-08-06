@@ -1,7 +1,6 @@
 package sample;
 
 import gnu.io.*;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.ScheduledService;
@@ -29,7 +28,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class Controller implements Initializable {
+
+	public native void uartFromc();
+
 
 	@FXML
 	Label label1;
@@ -61,8 +64,19 @@ public class Controller implements Initializable {
 	Stage imgstage;
 	int maxtemp,mintemp;
 
+
+	public static void print(char ch)
+	{
+		System.out.print(Integer.toHexString(ch&0xff)+" ");
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		//??C??
+		System.loadLibrary("jniTest");
+		uartFromc();
+
 
 		cb2.getItems().addAll(
 				"1200",
@@ -103,8 +117,8 @@ public class Controller implements Initializable {
 
 
 
-		mServer ms=new mServer(cb1);
-		ms.start();
+//		mServer ms=new mServer(cb1);
+//		ms.start();
 		ta3.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -127,84 +141,87 @@ public class Controller implements Initializable {
 			serialPort = openSerialPort(Comm, baudRate);
 		//设置串口的listener
 		if(serialPort!=null&&bd.getText()!="关闭串口")
-			setListenerToSerialPort(serialPort, new SerialPortEventListener() {
-				@Override
-				public void serialEvent(SerialPortEvent arg0) {
-					if (arg0.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-						//数据通知
-						bytes = readData(serialPort);
-						for(int len=0;len<bytes.length;len++)
-						{
-							//System.out.println(flag+"-"+Byte.toString(bytes[len]));
-							if(flag==2||flag==3)
-							{
-								if(index<20240)
-								{
-									bytesimg[index]=bytes[len];
-									index++;
-								}
-								else
-								{
-									index=2;
-									flag=0;
-									System.out.println("Error");
-								}
-							}
-
-							if(flag==1&&bytes[len]==-40)
-								flag=2;
-							else if(flag==1)
-								flag=0;
-							else if(flag==0&&bytes[len]==-1)
-								flag=1;
-							else if(flag==3&&bytes[len]==-39)
-							{
-
-								//TODO
-								image= new Image(new ByteArrayInputStream(bytesimg));
-							Platform.runLater(new Runnable() {
-								@Override
-								public void run() {
-
-									imv.setImage(image);
-								}
-							});
-								flag=0;
-								System.out.println(Byte.toString(bytesimg[0])+Byte.toString(bytesimg[1])+Byte.toString(bytesimg[2])
-										+Byte.toString(bytesimg[3])+Byte.toString(bytesimg[4])+Byte.toString(bytesimg[5])
-										+Byte.toString(bytesimg[6])+Byte.toString(bytesimg[7])+Byte.toString(bytesimg[8])
-										+Byte.toString(bytesimg[9])+Byte.toString(bytesimg[index-2])+Byte.toString(bytesimg[index-1]));
-
-								System.out.println("Size:"+index);
-								bytesimg=new byte[20240];
-								bytesimg[0]=-1;
-								bytesimg[1]=-40;
-								index=2;
-
-							}else if(flag==3)
-								flag=2;
-							else if(flag==2&&bytes[len]==-1)
-								flag=3;
-						}
-//					Platform.runLater(new Runnable() {
-//						@Override
-//						public void run() {
-//							if(bytes!=null)
-//							{
-//								ta1.appendText(new String(bytes));
-//							}
-//
-//						}
-//					});
-						//System.out.println("GengXin->"+Thread.currentThread());
-					}
-				}
-			});
 //			setListenerToSerialPort(serialPort, new SerialPortEventListener() {
 //				@Override
 //				public void serialEvent(SerialPortEvent arg0) {
 //					if (arg0.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 //						//数据通知
+//						bytes = readData(serialPort);
+//						for(int len=0;len<bytes.length;len++)
+//						{
+//							//System.out.println(flag+"-"+Byte.toString(bytes[len]));
+//							if(flag==2||flag==3)
+//							{
+//								if(index<20240)
+//								{
+//									bytesimg[index]=bytes[len];
+//									index++;
+//								}
+//								else
+//								{
+//									index=2;
+//									flag=0;
+//									System.out.println("Error");
+//								}
+//							}
+//
+//							if(flag==1&&bytes[len]==-40)
+//								flag=2;
+//							else if(flag==1)
+//								flag=0;
+//							else if(flag==0&&bytes[len]==-1)
+//								flag=1;
+//							else if(flag==3&&bytes[len]==-39)
+//							{
+//
+//								//TODO
+//								image= new Image(new ByteArrayInputStream(bytesimg));
+//							Platform.runLater(new Runnable() {
+//								@Override
+//								public void run() {
+//
+//									imv.setImage(image);
+//								}
+//							});
+//								flag=0;
+//								System.out.println(Byte.toString(bytesimg[0])+Byte.toString(bytesimg[1])+Byte.toString(bytesimg[2])
+//										+Byte.toString(bytesimg[3])+Byte.toString(bytesimg[4])+Byte.toString(bytesimg[5])
+//										+Byte.toString(bytesimg[6])+Byte.toString(bytesimg[7])+Byte.toString(bytesimg[8])
+//										+Byte.toString(bytesimg[9])+Byte.toString(bytesimg[index-2])+Byte.toString(bytesimg[index-1]));
+//
+//								System.out.println("Size:"+index);
+//								bytesimg=new byte[20240];
+//								bytesimg[0]=-1;
+//								bytesimg[1]=-40;
+//								index=2;
+//
+//							}else if(flag==3)
+//								flag=2;
+//							else if(flag==2&&bytes[len]==-1)
+//								flag=3;
+//						}
+////					Platform.runLater(new Runnable() {
+////						@Override
+////						public void run() {
+////							if(bytes!=null)
+////							{
+////								ta1.appendText(new String(bytes));
+////							}
+////
+////						}
+////					});
+//						//System.out.println("GengXin->"+Thread.currentThread());
+//					}
+//				}
+//			});
+			setListenerToSerialPort(serialPort, arg0 -> {
+				if (arg0.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+					bytes = readData(serialPort);
+					indexheat+=bytes.length;
+					System.out.println("Size:"+indexheat);
+
+//						//数据通知
+//						long lt=System.currentTimeMillis();
 //						bytes = readData(serialPort);
 //						for(int len=0;len<bytes.length;len++)
 //						{
@@ -299,10 +316,13 @@ public class Controller implements Initializable {
 //								flag=2;
 //							else if(flag==2&&bytes[len]==-1)
 //								flag=3;
+//
 //						}
-//					}
-//				}
-//			});
+//						lt=System.currentTimeMillis()-lt;
+//						if(lt>0)
+//							System.out.println(""+lt+"---"+indexheat);
+				}
+			});
 		if(Comm!=null&&baudRate>0&&bd.getText()!="关闭串口")
 			bd.setText("关闭串口");
 		else
@@ -328,7 +348,7 @@ public class Controller implements Initializable {
 				sendData=ta3.getText()+"\r\n";
 			else
 				sendData=ta3.getText();
-			ta2.appendText("?"+sendData);
+			ta2.appendText("✔"+sendData);
 			sendData(serialPort, sendData.getBytes());//发送数据
 
 		}
@@ -358,6 +378,7 @@ public class Controller implements Initializable {
 
 	public void rst1fun(ActionEvent actionEvent) {
 		imgstage.show();
+		indexheat=0;
 
 	}
 
