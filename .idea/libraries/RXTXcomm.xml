@@ -4,6 +4,9 @@
       <root url="jar://$PROJECT_DIR$/src/res/RXTXcomm.jar!/" />
     </CLASSES>
     <JAVADOC />
+    <NATIVE>
+      <root url="file://$USER_HOME$/Desktop/vs15/jniTest/x64/Release" />
+    </NATIVE>
     <SOURCES />
   </library>
 </component>
